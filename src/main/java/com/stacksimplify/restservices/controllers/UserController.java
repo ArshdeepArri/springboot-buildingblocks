@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,18 +31,19 @@ import com.stacksimplify.restservices.services.UserService;
 //Controller -
 @RestController
 @Validated
+@RequestMapping(value = "/users")
 class UserController {
 
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("/users")
+	@GetMapping
 	public List<User> getAllUsers() {
 		
 		return userService.getAllUsers();	
 	}
 	
-	@PostMapping("/users")
+	@PostMapping
 	public ResponseEntity<Void> createUser(@Valid @RequestBody User user, UriComponentsBuilder builders) {
 		try {
 			userService.createUser(user);
@@ -57,7 +59,7 @@ class UserController {
 		
 	}
 	
-	@GetMapping("users/{id}")
+	@GetMapping("/{id}")
 	public Optional<User> getUserById(@PathVariable("id") @Min(1) Long id){
 		
 		try {
@@ -69,7 +71,7 @@ class UserController {
 		}
 	}
 	
-	@PutMapping("users/{id}")
+	@PutMapping("/{id}")
 	public User updateUserById(@PathVariable("id") Long id, @RequestBody User user) {
 		
 		try {
@@ -81,12 +83,12 @@ class UserController {
 		
 	}
 	
-	@DeleteMapping("users/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteUserById(@PathVariable("id") Long id) {
 		userService.deleteUserById(id);
 	}
 	
-	@GetMapping("users/byusername/{username}")
+	@GetMapping("/byusername/{username}")
 	public User getUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException {
 		User user = userService.getUserByUserName(username);
 		if(user == null) {
@@ -94,9 +96,4 @@ class UserController {
 		}
 		return user;
 	}
-	
-	
-	
-	
-	
 }
